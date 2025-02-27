@@ -1,9 +1,6 @@
 # Allied Vision Alvium CSI driver for Jetpack 6.2
 
 ## Compatibility
-> [!IMPORTANT]
-> ### GenICam for CSI2 access
-> To use GenICam for CSI2 access a beta version of the CSI Transport Layer is required. It can be downloaded here: https://www.alliedvision.com/de/products/software/beta-early-adaptor/
 
 ### SoMs + Carrier Boards 
 - Jetson AGX Orin DevKit
@@ -58,14 +55,6 @@
         make install
     ```
 
-# Beta Disclaimer
+## Known limitations
 
-Please be aware that all code revisions not explicitly listed in the Github Release section are
-considered a **Beta Version**.
-
-For Beta Versions, the following applies in addition to the GPLv2 License:
-
-THE SOFTWARE IS PRELIMINARY AND STILL IN TESTING AND VERIFICATION PHASE AND IS PROVIDED ON AN “AS
-IS” AND “AS AVAILABLE” BASIS AND IS BELIEVED TO CONTAIN DEFECTS. THE PRIMARY PURPOSE OF THIS EARLY
-ACCESS IS TO OBTAIN FEEDBACK ON PERFORMANCE AND THE IDENTIFICATION OF DEFECTS IN THE SOFTWARE,
-HARDWARE AND DOCUMENTATION.
+- When using external triggers the NVIDIA v4l2 control  ```override_capture_timeout_ms``` has to be set a suitable timeout value or -1 for a infinite timeout. Otherwise incomplete buffers with the error flag set might be returned due to a timeout while waiting for the image. 
