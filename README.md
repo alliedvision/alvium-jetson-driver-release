@@ -5,9 +5,9 @@
 ### SoMs + Carrier Boards 
 - Jetson AGX Orin DevKit
 - Jetson Orin Nano DevKit
-- Jetson Orin NX + Jetson Orin Nano DevKit carrier
+- Jetson Orin NX + forecr DSBOARD-ORNX carrier
 ### Cameras
-- All Alvium C cameras with Firmware 13 or newer
+- All Alvium C cameras with Firmware 14 or newer
 
 ## Installation 
 1. Download the debian package from the releases section to our target board
