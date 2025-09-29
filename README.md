@@ -59,6 +59,32 @@
 
 - When using external triggers the NVIDIA v4l2 control  ```override_capture_timeout_ms``` has to be set a suitable timeout value or -1 for a infinite timeout. Otherwise incomplete buffers with the error flag set might be returned due to a timeout while waiting for the image. 
 
+## NVIDIA accelerated gstreamer examples
+
+### nvv4l2camerasrc
+To use the nvv4l2camerasrc gstreamer element with an Alvium camera the driver must be configured correctly.
+
+The pixelformat must be set to UYVY:
+```shell
+v4l2-ctl -v pixelformat=UYVY
+```
+The bytesperline value must be a multiple of 256:
+1. Read bytesperline: ```v4l2-ctl -v```
+2. Calculate algined value: ```aligned_stride = ceil(bytesperline/256)```
+3. Set preferred_stride v4l2 ctrl: ```v4l2-ctl –c preferred_stride=<aligned_stride>```
+
+Example pipeline:
+```
+gst-launch-1.0 nvv4l2camerasrc ! 'video/x-raw(memory:NVMM), width=<width>, height=<height>' ! nvvidconv ! nveglglessink
+```
+
+### vmbsrc
+It is also possible to connect the vmbstrc with the NVIDIA accelerated gstreamer elements by using the nvvidconv elements. To supports transforms the normal into NVMM image buffers.
+Example pipeline:
+```
+gst-launch-1.0 vmbsrc camera=DEV_00012C00D323 ! 'video/x-raw,format=UYVY,' ! nvvidconv ! nveglglessink
+```
+
 # Beta Disclaimer
 
 Please be aware that all code revisions not explicitly listed in the Github Release section are
