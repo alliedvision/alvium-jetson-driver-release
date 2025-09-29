@@ -79,7 +79,7 @@ gst-launch-1.0 nvv4l2camerasrc ! 'video/x-raw(memory:NVMM), width=<width>, heigh
 ```
 
 ### vmbsrc
-It is also possible to connect the vmbstrc with the NVIDIA accelerated gstreamer elements by using the nvvidconv elements. To supports transforms the normal into NVMM image buffers.
+It is also possible to connect the vmbstrc with the NVIDIA accelerated gstreamer elements by using the nvvidconv elements to transform the normal into NVMM image buffers.
 Example pipeline:
 ```
 gst-launch-1.0 vmbsrc camera=DEV_00012C00D323 ! 'video/x-raw,format=UYVY,' ! nvvidconv ! nveglglessink
