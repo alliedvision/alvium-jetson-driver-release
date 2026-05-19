@@ -1,7 +1,7 @@
 MAKEFILE_DIR := $(abspath $(shell dirname $(lastword $(MAKEFILE_LIST))))
 NVIDIA_CONFTEST ?= $(MAKEFILE_DIR)/out/nvidia-conftest
 
-all: nvidia-nvgpu-modules nvidia-oot-modules alvium-driver-modules 
+all: nvidia-nvgpu-modules nvidia-oot-modules alvium-driver-modules
 install: nvidia-modules-install alvium-driver-modules-install
 
 alvium-driver-modules: nvidia-oot-modules
