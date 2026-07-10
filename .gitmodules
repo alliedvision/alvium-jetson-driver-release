@@ -10,6 +10,3 @@
 [submodule "nvidia-nvethernetrm"]
 	url = https://github.com/alliedvision/nvidia-nvethernetrm.git
 	path = nvidia-nvethernetrm
-[submodule "nvidia-nvgpu"]
-	url = https://github.com/alliedvision/nvidia-nvgpu.git
-	path = nvidia-nvgpu
