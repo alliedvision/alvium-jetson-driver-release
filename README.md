@@ -3,11 +3,21 @@
 ## Compatibility
 
 ### SoMs + Carrier Boards 
+- **New** Jetson Thor T5000/T4000 + forecr DSBOARD-THRMAX carrier
 - Jetson AGX Orin DevKit
 - Jetson Orin Nano DevKit
 - Jetson Orin NX + forecr DSBOARD-ORNX carrier
 ### Cameras
 - All Alvium C cameras with Firmware 14 or newer
+
+## Thor Adapter Board Information
+> [!CAUTION]
+> For using the Thor system the "Adapter Board for NVIDIA Jetson 
+> AGX Orin/Xavier and TX2" needs to be modified. Otherwise the system won't boot
+> with the adatper board attached. The required modification is to remove the two 
+> resistors R13 and R14. Detailed design information about the adapter board
+> can be found in the following Github repository: [adapter_Nvidia_Jetson_Xavier_TX2_VarOrin_DevKit](https://github.com/alliedvision/adapter_Nvidia_Jetson_Xavier_TX2_VarOrin_DevKit)
+
 
 ## Installation 
 1. Download the debian package from the releases section to our target board
@@ -16,17 +26,76 @@
     sudo apt install ./avt-nvidia-csi2-driver_<version>.deb
     ```
 3. Configure the device tree
-    1. Start the jetson-io tool
-        ```shell
-        sudo /opt/nvidia/jetson-io/jetson-io.py
-        ```
-    2. Select the CSI connector configuration
-        - For AGX Orin: "Jetson AGX CSI Connector"
-        - For Orin Nano / NX: "Jetson 22pin CSI Connector"
-    3. Select "Configure for compatible hardware"
-    4. Select the appropriate "* Alvium C Dual *" configuration
-    5. Select "Save pin changes" 
-    6. Select "Save and reboot to reconfigure pins"
+    - Orin
+        1. Start the jetson-io tool
+            ```shell
+            sudo /opt/nvidia/jetson-io/jetson-io.py
+            ```
+        2. Select the CSI connector configuration
+            - For AGX Orin: "Jetson AGX CSI Connector"
+            - For Orin Nano / NX: "Jetson 22pin CSI Connector"
+        3. Select "Configure for compatible hardware"
+        4. Select the appropriate "* Alvium C Dual *" configuration
+        5. Select "Save pin changes" 
+        6. Select "Save and reboot to reconfigure pins"
+    - Thor
+        > [!WARNING]
+        > For the Thor system jetson-io is not supported therefore the bootloader configuration must be adjusted manually, which can lead to an not booting system.
+        1. Dermine the name of the system device tree by running
+            ```shell
+            ls /boot/dtb/
+            ```
+        2. Open the bootloader configuration file "/boot/extlinux/extlinux.conf" as root using a text editor of our choice
+        3. Create a copy of the "primary" configuration below the "primary" configuration. The revelvant part of the configuration file should now look similar to this: 
+            ```
+            ...
+
+            LABEL primary
+                MENU LABEL primary kernel
+                LINUX /boot/Image
+                INITRD /boot/initrd
+                APPEND ${cbootargs} root=PARTUUID=c13a4afc-3098-4389-971f-f5d1ee390c2f rw rootwait rootfstype=ext4 mminit_loglevel=4 earlycon=tegra_utc,mmio32,0xc5a0000 console=ttyUTC0,115200 firmware_class.path=/etc/firmware fbcon=map:0 efi=runtime audit=1 audit_backlog_limit=8192 swiotlb=2048 video=efifb:off console=tty0
+
+            LABEL primary
+                MENU LABEL primary kernel
+                LINUX /boot/Image
+                INITRD /boot/initrd
+                APPEND ${cbootargs} root=PARTUUID=c13a4afc-3098-4389-971f-f5d1ee390c2f rw rootwait rootfstype=ext4 mminit_loglevel=4 earlycon=tegra_utc,mmio32,0xc5a0000 console=ttyUTC0,115200 firmware_class.path=/etc/firmware fbcon=map:0 efi=runtime audit=1 audit_backlog_limit=8192 swiotlb=2048 video=efifb:off console=tty0
+            ```
+        4. Rename the copied configration to "AVT_CSI2" by changing the LABEL
+            ```
+            ...
+
+            LABEL AVT_CSI2
+
+            ...
+            ```
+        5. Add an FDT entry below INITRD with the system device tree file. The name must be changing according to the information from step 1.
+            ```
+            ...
+
+            LINUX /boot/Image
+            INITRD /boot/initrd
+            FDT /boot/dtb/kernel_tegra264-p4071-0000+p3834-0000-nv.dtb
+            
+            ...
+            ```
+        6. Enable the device tree overlay by adding the OVERLAYS entry below FDT.
+            ```
+            ...
+            
+            FDT /boot/dtb/kernel_tegra264-p4071-0000+p3834-0000-nv.dtb
+            OVERLAYS /boot/tegra264-p3834-camera-forecr-thrmax-dual-alvium-19616-2x4.dtbo
+            
+            ...
+            ```
+        7. As last step set the "AVT_CSI2" configuration as default.
+            ```
+            TIMEOUT 30
+            DEFAULT AVT_CSI2
+            
+            ...
+            ```
 4. After the board has rebooted the camera can be accessed with V4L2 and Vimba X
 
 ## Building
