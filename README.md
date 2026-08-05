@@ -39,14 +39,16 @@
         5. Select "Save pin changes" 
         6. Select "Save and reboot to reconfigure pins"
     - Thor
-        > [!WARNING]
-        > For the Thor system jetson-io is not supported therefore the bootloader configuration must be adjusted manually, which can lead to an not booting system.
-        1. Dermine the name of the system device tree by running
+        > **WARNING**
+        > For the Thor system jetson-io is not supported and therefore the bootloader configuration must be adjusted manually, which can lead to an not booting system.
+
+
+        1. Determine the name of the system device tree by running
             ```shell
             ls /boot/dtb/
             ```
         2. Open the bootloader configuration file "/boot/extlinux/extlinux.conf" as root using a text editor of our choice
-        3. Create a copy of the "primary" configuration below the "primary" configuration. The revelvant part of the configuration file should now look similar to this: 
+        3. Create a copy of the "primary" configuration below the "primary" configuration. The relevant part of the configuration file should now look similar to this: 
             ```
             ...
 
@@ -62,7 +64,7 @@
                 INITRD /boot/initrd
                 APPEND ${cbootargs} root=PARTUUID=c13a4afc-3098-4389-971f-f5d1ee390c2f rw rootwait rootfstype=ext4 mminit_loglevel=4 earlycon=tegra_utc,mmio32,0xc5a0000 console=ttyUTC0,115200 firmware_class.path=/etc/firmware fbcon=map:0 efi=runtime audit=1 audit_backlog_limit=8192 swiotlb=2048 video=efifb:off console=tty0
             ```
-        4. Rename the copied configration to "AVT_CSI2" by changing the LABEL
+        4. Rename the copied configuration to "AVT_CSI2" by changing the LABEL
             ```
             ...
 
