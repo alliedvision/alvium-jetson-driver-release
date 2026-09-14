@@ -15,7 +15,7 @@
 > For using the Thor system the "Adapter Board for NVIDIA Jetson 
 > AGX Orin/Xavier and TX2" needs to be modified. Otherwise the system won't boot
 > with the adatper board attached. The required modification is to remove the two 
-> resistors R13 and R14. Detailed design information about the adapter board
+> resistors R17 and R18. Detailed design information about the adapter board
 > can be found in the following Github repository: [adapter_Nvidia_Jetson_Xavier_TX2_VarOrin_DevKit](https://github.com/alliedvision/adapter_Nvidia_Jetson_Xavier_TX2_VarOrin_DevKit)
 
 
